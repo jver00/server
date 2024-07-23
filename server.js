@@ -107,28 +107,16 @@ app.get("/opendoor/:dataid/:doorNumber", (req, res) => {
   const dataid = req.params.dataid;
   const doorNumber = req.params.doorNumber;
 
-  // Include a response in the "opendoor" event
+  // Include a response in the "api-triggered" event
   const responseMessage = "API trigger message sent to clients in the room";
 
-  // Emit the "opendoor" event to the controller namespace
+  // Emit the "api-triggered" event to the specified room in the general namespace
   controllerNamespace.to(dataid).emit("opendoor", {
     doorNumber,
     response: responseMessage,
   });
 
-  // Listen for the client-response event and include it in res.send
-  const responseListener = (clientResponse) => {
-    res.send({
-      apiResponse: "API request received",
-      clientResponse,
-    });
-
-    // Remove the listener after the response is received
-    controllerNamespace.to(dataid).off("client-response", responseListener);
-  };
-
-  // Attach the listener to the room
-  controllerNamespace.to(dataid).on("client-response", responseListener);
+  res.send("Event emitted successfully");
 });
 
 const PORT = process.env.PORT || 7777;
