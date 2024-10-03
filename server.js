@@ -119,6 +119,18 @@ app.get("/opendoor/:dataid/:doorNumber", (req, res) => {
   res.send("Event emitted successfully");
 });
 
+app.post("/send-message/:dataid", (req, res) => {
+  const dataid = req.params.dataid;
+  const message = req.body.message;
+
+  // Emit a 'message' event to the specific room (dataid)
+  generalNamespace.to(dataid).emit("message", { message });
+
+  res.send("Message event emitted successfully");
+});
+
+
+
 const PORT = process.env.PORT || 7777;
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
